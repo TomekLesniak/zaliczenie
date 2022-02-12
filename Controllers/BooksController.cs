@@ -7,6 +7,8 @@ using LibApp.Models;
 using LibApp.ViewModels;
 using LibApp.Data;
 using LibApp.Repositories;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
@@ -23,6 +25,7 @@ namespace LibApp.Controllers
             _bookRepository = bookRepository;
         }
 
+        [Authorize(Roles = "User,StoreManager,Owner")]
         public IActionResult Index()
         {
             var books = _bookRepository.GetAllBooks();
@@ -37,6 +40,7 @@ namespace LibApp.Controllers
             return View(book);
         }
         
+        [Authorize(Roles="StoreManager,Owner")]
         public IActionResult Edit(int id)
         {
             var book = _bookRepository.GetBookById(id);
@@ -54,6 +58,7 @@ namespace LibApp.Controllers
             return View("BookForm", viewModel);
         }
 
+        [Authorize(Roles = "StoreManager,Owner")]
         public IActionResult New()
         {
             var viewModel = new BookFormViewModel

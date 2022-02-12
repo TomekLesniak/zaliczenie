@@ -48,7 +48,7 @@ namespace LibApp.Repositories
 
         public Book GetBookById(int id)
         {
-            return _context.Books.SingleOrDefault(x => x.Id == id);
+            return _context.Books.Include(x => x.Genre).SingleOrDefault(x => x.Id == id);
         }
 
         public void Save()

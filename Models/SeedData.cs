@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
+using AutoMapper.Internal;
 using LibApp.Data;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -8,9 +10,25 @@ namespace LibApp.Models
 {
     public static class SeedData
     {
-        public static void Initialize(IServiceProvider serviceProvider)
+        public static async void Initialize(IServiceProvider serviceProvider)
         {
-            using var context = serviceProvider.GetRequiredService<ApplicationDbContext>();
+            await using var context = serviceProvider.GetRequiredService<ApplicationDbContext>();
+            using var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+            if (!roleManager.Roles.Any())
+            {
+                var roles = new[]
+                {
+                    RolesConstants.Owner,
+                    RolesConstants.StoreManager,
+                    RolesConstants.User
+                };
+            
+                foreach (var role in roles)
+                {
+                    await roleManager.CreateAsync(new IdentityRole(role));
+                }
+            }
 
             if (context.MembershipTypes.Any())
             {
@@ -118,7 +136,8 @@ namespace LibApp.Models
                 }
                 );
 
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
+
     }
 }
