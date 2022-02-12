@@ -25,25 +25,30 @@ namespace LibApp.Controllers.Api
         [HttpGet("user")]
         public async Task<IActionResult> GetUserRole()
         {
-            var user = _signIn.UserManager.Users.First(x => x.UserName == _signIn.Context.User.Identity.Name);
-            var result = await _userManager.AddToRoleAsync(user, RolesConstants.User);
+            var user = GetLoggedInUser();
+            await _userManager.AddToRoleAsync(user, RolesConstants.User);
             return Ok("logout and login again for changes to be applied");
         }
 
         [HttpGet("storeManager")]
         public async Task<IActionResult> GetStoreManagerRole()
         {
-            var user = _signIn.UserManager.Users.First(x => x.UserName == _signIn.Context.User.Identity.Name);
-            var result = await _userManager.AddToRoleAsync(user, RolesConstants.StoreManager);
+            var user = GetLoggedInUser();
+            await _userManager.AddToRoleAsync(user, RolesConstants.StoreManager);
             return Ok("logout and login again for changes to be applied");
         }
 
         [HttpGet("owner")]
         public async Task<IActionResult> GetOwnerRole()
         {
-            var user = _signIn.UserManager.Users.First(x => x.UserName == _signIn.Context.User.Identity.Name);
-            var result = await _userManager.AddToRoleAsync(user, RolesConstants.Owner);
+            var user = GetLoggedInUser();
+            await _userManager.AddToRoleAsync(user, RolesConstants.Owner);
             return Ok("logout and login again for changes to be applied");
+        }
+
+        private IdentityUser GetLoggedInUser()
+        {
+            return _signIn.UserManager.Users.First(x => x.UserName == _signIn.Context.User.Identity.Name);
         }
     }
 }
