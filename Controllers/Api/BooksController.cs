@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using LibApp.Repositories;
+using Microsoft.AspNetCore.Authorization;
 
 namespace LibApp.Controllers.Api
 {
@@ -41,6 +42,7 @@ namespace LibApp.Controllers.Api
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Owner")]
         public IActionResult RemoveBook(int id)
         {
             _bookRepository.DeleteBook(id);
